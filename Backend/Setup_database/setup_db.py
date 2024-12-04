@@ -1,5 +1,5 @@
 import mysql.connector
-from Backend.connect_database import connect_database
+from Backend.database_manager import connect_database
 
 def execute_sql_file(cursor, file_path):
     # Read the SQL file with 'latin-1' encoding
