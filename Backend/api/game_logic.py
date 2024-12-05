@@ -4,11 +4,19 @@ from flask_cors import CORS
 from datetime import timedelta, datetime
 import random
 from math import radians, sin, cos, sqrt, atan2
-from database_manager import databaseManager
+from Backend.database_manager import databaseManager
 from Backend.hurdles import get_hurdles_for_level
+import logging
+
+
 
 app = Flask(__name__)
+db_manager = databaseManager()
 CORS(app)
+
+# For API request tracking
+logging.basicConfig(level=logging.INFO)
+logging.info(f"API Request: {request.method} {request.path}")
 
 # User Manager Class
 class UserManager:
@@ -70,8 +78,8 @@ class FlightManager:
 
 
 # Create instances
-user_manager = UserManager(db_manager=databaseManager)
-flight_manager = FlightManager(db_manager=databaseManager)
+user_manager = UserManager(db_manager)
+flight_manager = FlightManager(db_manager)
 
 # API Routes
 @app.route('/user', methods=['POST'])
@@ -100,16 +108,22 @@ def get_airports():
 
 @app.route('/weather', methods=['GET'])
 def get_weather():
-    level = int(request.args.get("level", 1))
-    conditions = ["Sunny", "Windy", "Rainy", "Snowy"]
-    weather = {
-        "condition": conditions[level - 1],
-        "temperature": random.randint(-10, 30),
-        "wind_speed": random.randint(5, 40),
-        "humidity": random.randint(50, 100),
-        "visibility": random.randint(5, 20)
-    }
-    return jsonify({"status": "success", "data": weather})
+    """Get weather conditions based on level."""
+    try:
+        level = int(request.args.get("level", 1))  # Default to level 1 if not provided
+        hurdles = get_hurdles_for_level(level)  # Generate hurdles based on level
+
+        weather = {
+            "condition": hurdles.get("condition", "Sunny"),
+            "temperature": hurdles.get("temperature", random.randint(-10, 30)),
+            "wind_speed": hurdles.get("wind_speed", random.randint(5, 40)),
+            "humidity": hurdles.get("humidity", random.randint(50, 100)),
+            "visibility": hurdles.get("visibility", random.randint(5, 20)),
+        }
+        return jsonify({"status": "success", "data": weather})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 @app.route('/flight-duration', methods=['POST'])
 def calculate_flight_duration():
@@ -126,6 +140,72 @@ def calculate_flight_duration():
     flight_duration = timedelta(hours=duration_hours)
 
     return jsonify({"status": "success", "data": {"duration": str(flight_duration), "distance": distance}})
+
+@app.route('/user', methods=['POST'])
+def handle_user():
+    """API to create or fetch a user"""
+    data = request.get_json()
+    username = data.get('username')
+
+    # Check if the user exists
+    user = db_manager.fetch_one("SELECT id, fuel_consumed FROM User WHERE username = %s", (username,))
+    if user:
+        user_id, fuel_consumed = user
+        return jsonify({
+            'user_id': user_id,
+            'fuel_consumed': fuel_consumed,
+            'message': f"Welcome back, {username}!"
+        })
+    else:
+        # Create a new user if doesn't exist
+        user_id = db_manager.execute_query(
+            "INSERT INTO User (username, fuel_consumed) VALUES (%s, %s)", (username, 500)
+        )
+        return jsonify({
+            'user_id': user_id,
+            'fuel_consumed': 500,
+            'message': f"Welcome {username}, your profile has been created!"
+        })
+
+@app.route('/flight', methods=['POST'])
+def schedule_flight():
+    """API to schedule a flight and assign hurdles."""
+    try:
+        data = request.get_json()
+        departure_airport_id = data.get('departure_airport_id')
+        arrival_airport_id = data.get('arrival_airport_id')
+        scheduled_departure_time = data.get('scheduled_departure_time')
+        scheduled_arrival_time = data.get('scheduled_arrival_time')
+        level = data.get('level', 1)  # Include game level in the flight request
+
+        # Generate hurdles for the current level
+        hurdles = get_hurdles_for_level(level)
+
+        # Store flight details in the database
+        flight_id = db_manager.execute_query(
+            """
+            INSERT INTO Flight (departure_airport_id, arrival_airport_id, scheduled_departure_time, scheduled_arrival_time)
+            VALUES (%s, %s, %s, %s)
+            """,
+            (departure_airport_id, arrival_airport_id, scheduled_departure_time, scheduled_arrival_time)
+        )
+
+        return jsonify({
+            "flight_id": flight_id,
+            "message": f"Flight scheduled successfully with hurdles: {hurdles}.",
+            "hurdles": hurdles
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route('/weather', methods=['GET'])
+def get_weather():
+    """API to get random weather data"""
+    weather = db_manager.fetch_all("SELECT * FROM Weather ORDER BY RAND() LIMIT 1")
+    return jsonify({
+        'weather': weather
+    })
 
 if __name__ == '__main__':
     app.run(debug=True)
