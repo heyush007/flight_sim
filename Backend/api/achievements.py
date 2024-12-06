@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from Backend.database_manager import databaseManager
+import logging
 
 achievements_bp = Blueprint("achievements", __name__)
 db = databaseManager()
@@ -7,16 +8,42 @@ db = databaseManager()
 # Fetch achievements for a user
 @achievements_bp.route("/achievements/<int:user_id>", methods=["GET"])
 def get_achievements(user_id):
-    query = """
-    SELECT achievement_name, achievement_description, status
-    FROM Achievements
-    WHERE user_id = %s
-    """
     try:
+        query = """
+        SELECT achievement_name, achievement_description, status, created_at
+        FROM Achievements
+        WHERE user_id = %s
+        ORDER BY created_at DESC
+        """
         achievements = db.fetch_all(query, (user_id,))
-        return jsonify(achievements), 200
+        
+        if not achievements:
+            return jsonify({
+                "status": "success",
+                "data": [],
+                "message": "No achievements found for this user"
+            }), 200
+
+        formatted_achievements = [
+            {
+                "name": ach[0],
+                "description": ach[1],
+                "status": ach[2],
+                "date": ach[3].strftime("%Y-%m-%d %H:%M:%S")
+            }
+            for ach in achievements
+        ]
+
+        return jsonify({
+            "status": "success",
+            "data": formatted_achievements
+        }), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        logging.error(f"Error fetching achievements: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": "Failed to fetch achievements"
+        }), 500
 
 # Add a new achievement
 @achievements_bp.route("/achievements", methods=["POST"])

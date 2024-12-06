@@ -1,33 +1,46 @@
-import requests
+import os
 from flask import Blueprint, jsonify
 from Backend.database_manager import databaseManager
+import requests
+import logging
 
 weather_bp = Blueprint("weather", __name__)
 db = databaseManager()
 
-API_KEY = "your_openweather_api_key"  # Replace with your API key
+# Get API key from environment variable
+API_KEY = os.getenv('OPENWEATHER_API_KEY')
 BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
 
-# Fetch weather data by city name
 @weather_bp.route("/weather/<string:city>", methods=["GET"])
 def get_weather_by_city(city):
     try:
-        response = requests.get(BASE_URL, params={"q": city, "appid": API_KEY, "units": "metric"})
+        response = requests.get(
+            BASE_URL, 
+            params={
+                "q": city, 
+                "appid": API_KEY, 
+                "units": "metric"
+            },
+            timeout=10  # Add timeout
+        )
+        response.raise_for_status()  # Raise exception for bad status codes
         data = response.json()
-
-        if data.get("cod") != 200:
-            return jsonify({"error": data.get("message")}), 404
 
         weather = {
             "city": data["name"],
             "temperature": data["main"]["temp"],
             "humidity": data["main"]["humidity"],
             "description": data["weather"][0]["description"],
+            "wind_speed": data["wind"]["speed"]
         }
 
-        return jsonify(weather), 200
+        return jsonify({"status": "success", "data": weather}), 200
+    except requests.RequestException as e:
+        logging.error(f"Weather API error: {str(e)}")
+        return jsonify({"status": "error", "message": "Failed to fetch weather data"}), 503
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        logging.error(f"Unexpected error: {str(e)}")
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 # Fetch dynamic weather data for game simulation
 @weather_bp.route("/weather/dynamic", methods=["GET"])
