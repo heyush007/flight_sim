@@ -1,0 +1,87 @@
+/* Game-specific styles */
+.game-container {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    min-height: 400px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+/* Level Display */
+.level-display {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1.2rem;
+}
+
+/* Fuel Display */
+.fuel-display {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.fuel-bar {
+    width: 150px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.fuel-level {
+    height: 100%;
+    background: #4CAF50;
+    transition: width 0.3s ease;
+}
+
+/* Hurdle Styles */
+.hurdle {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    animation: fadeIn 0.5s ease;
+}
+
+.hurdle-description {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.hurdle-options {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .airport-selection {
+        grid-template-columns: 1fr;
+    }
+
+    .game-container {
+        height: 50vh;
+    }
+
+    .hurdle-options {
+        flex-direction: column;
+    }
+} 
