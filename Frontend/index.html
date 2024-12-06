@@ -1,10 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Gen Flight Sim</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map { height: 300px; }
+    </style>
 </head>
 <body>
-$END$
+    <div class="container">
+        <!-- Header Section -->
+        <header>
+            <h1>Next Gen Flight Sim</h1>
+            <div id="user-info" class="hidden">
+                <span id="username-display"></span>
+                <span id="fuel-display"></span>
+            </div>
+        </header>
+
+        <!-- Main Game Area -->
+        <main>
+            <!-- Login/Register Section -->
+            <section id="auth-section">
+                <div class="form-container">
+                    <input type="text" id="username" placeholder="Enter your username">
+                    <button id="start-game">Start Game</button>
+                </div>
+            </section>
+
+            <!-- Game Section (Initially Hidden) -->
+            <section id="game-section" class="hidden">
+                <!-- Airport Selection -->
+                <div class="airport-selection">
+                    <div class="departure">
+                        <h3>Select Departure Airport</h3>
+                        <select id="departure-airport"></select>
+                    </div>
+                    <div class="arrival">
+                        <h3>Select Arrival Airport</h3>
+                        <select id="arrival-airport"></select>
+                    </div>
+                </div>
+
+                <!-- Map View -->
+                <div id="map"></div>
+
+                <!-- Flight Info -->
+                <div class="flight-info hidden">
+                    <h3>Flight Details</h3>
+                    <div id="flight-details"></div>
+                    <button id="start-flight">Start Flight</button>
+                </div>
+
+                <!-- Game Play Area (For Hurdles) -->
+                <div id="game-play" class="hidden">
+                    <div id="hurdle-container"></div>
+                    <div id="game-controls">
+                        <button id="option-1">Option 1</button>
+                        <button id="option-2">Option 2</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Weather Section -->
+            <section id="weather-section" class="hidden">
+                <h3>Weather Information</h3>
+                <div id="weather-info"></div>
+            </section>
+
+            <!-- Achievements Section -->
+            <section id="achievements-section" class="hidden">
+                <h3>Achievements</h3>
+                <div id="achievements-list"></div>
+            </section>
+
+            <!-- Leaderboard Section -->
+            <section id="leaderboard-section" class="hidden">
+                <h3>Leaderboard</h3>
+                <div id="leaderboard-list"></div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Next Gen Flight Sim. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/weather.js"></script>
+    <script src="js/game.js"></script>
 </body>
 </html>
