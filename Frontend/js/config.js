@@ -1,6 +1,6 @@
 // API Configuration
 const CONFIG = {
-    API_BASE_URL: 'http://localhost:5000/api',
+    API_BASE_URL: 'http://localhost:63342/api',
     ENDPOINTS: {
         USER: '/game/user',
         AIRPORTS: '/game/airports',

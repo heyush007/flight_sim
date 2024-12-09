@@ -25,7 +25,10 @@ function displayWeather(weather) {
     utils.showElement("weather-section");
 }
 
+/*
 // Example usage
 document.addEventListener("DOMContentLoaded", () => {
-    loadWeather("New York"); // Load weather for a default city
-}); 
+    loadWeather("helsinki"); // Load weather for a default city
+});
+
+ */

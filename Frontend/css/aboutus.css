@@ -1,0 +1,34 @@
+/* Center the About Us section */
+#About_us {
+    text-align: center; /* Center the text */
+    margin: 20px auto;
+
+}
+
+/* Underline and pointer cursor for the heading */
+#About_us h3 {
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 1em; /* Optional: Increase the font size for better visibility */
+}
+
+/* Hidden content styling */
+#about_content {
+    display: none; /* Initially hidden */
+    margin-top: 10px;
+    text-align: center; /* Center the content */
+    padding: 20px;
+    border: 1px solid #ccc; /* Optional: Add a border for styling */
+    border-radius: 10px; /* Optional: Rounded corners */
+    background-color: rgba(23, 40, 65, 0.74); /* Optional: Add a background color */
+}
+
+/* Style the <pre> tag to make it more readable and centered */
+#about_content pre {
+    font-family: 'Arial', sans-serif;
+    text-align: center; /* Keep the text formatting from <pre> tag */
+    font-size: 1rem; /* Adjust the font size */
+    white-space: pre-wrap; /* Ensures long text wraps if needed */
+    word-wrap: break-word; /* Optional: Wrap long words in <pre> */
+    margin: 20px 20px 20px -60px; /* Centers the <pre> block */
+}

@@ -8,30 +8,44 @@
 /* Body Styling */
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    line-height: 1.6;
+    min-height: 100vh;
+    background: linear-gradient(135deg, rgba(30, 60, 114, 0.8) 0%, rgba(42, 82, 152, 0.8) 100%),
+                url('images/map.png');
+    background-size: cover;
+    background-blend-mode: soft-light;
+    background-attachment: fixed;
+
     color: #ffffff;
     line-height: 1.6;
     min-height: 100vh;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
 
-/* Header Styling */
+
 header {
     text-align: center;
-    padding: 20px 0;
+    padding: 22px 0;
     margin-bottom: 30px;
+    display: flex; /* Use flexbox for alignment */
+    justify-content: center; /* Center the content horizontally */
+    align-items: center; /* Align the items vertically */
+    gap: 10px; /* Add space between the logo and text */
+}
+
+#logo {
+    width: 60px; /* Adjust the width of the logo */
+    height: auto; /* Maintain the aspect ratio */
+    display: inline-block; /* Ensure the logo behaves as an inline-block element */
 }
 
 header h1 {
     font-size: 2.5rem;
-    margin-bottom: 10px;
+    margin: 0; /* Remove any margin to avoid misalignment */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
+
+
 
 #user-info {
     display: flex;
@@ -43,21 +57,23 @@ header h1 {
     margin-top: 10px;
 }
 
+
 /* Main Content */
 main {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    padding: 20px;
-    backdrop-filter: blur(10px);
+
+    backdrop-filter: blur(2px);
 }
 
 /* Section Styling */
 section {
     margin-bottom: 30px;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 15px;
     background: rgba(255, 255, 255, 0.05);
 }
+
 
 /* Footer */
 footer {
@@ -72,3 +88,5 @@ footer {
 .hidden {
     display: none !important;
 }
+
+

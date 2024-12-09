@@ -1,3 +1,18 @@
+// Function to toggle the content display on click (optional, can be removed)
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelector("#About_us h3").addEventListener("click", function () {
+        const aboutContent = document.getElementById("about_content");
+        // Toggle visibility when clicking on the "About Us" title
+        if (aboutContent.style.display === "none" || aboutContent.style.display === "") {
+            aboutContent.style.display = "block"; // Show content
+        } else {
+            aboutContent.style.display = "none"; // Hide content
+        }
+    });
+});
+
+
 document.getElementById("start-game").addEventListener("click", async () => {
     const username = document.getElementById("username").value.trim();
 

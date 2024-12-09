@@ -23,4 +23,4 @@ app.register_blueprint(progress_bp, url_prefix="/api/progress")
 app.register_blueprint(extensions_bp, url_prefix="/api/extensions")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=63342)
